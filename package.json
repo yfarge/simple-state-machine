@@ -2,7 +2,7 @@
   "name": "ts-state-machine",
   "version": "0.0.1",
   "description": "A finite state machine implementation in TypeScript.",
-  "main": "dist/index.js",
+  "main": "dist/machine.js",
   "keywords": [
     "typescript",
     "state",
