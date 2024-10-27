@@ -1,7 +1,10 @@
 import type { TMachineConfig, TMachine } from './machine.types.js';
 
-export function createMachine(config: TMachineConfig): TMachine {
-  const machine: TMachine = {
+export function createMachine<
+  TState extends string = string,
+  TEvent extends string = string,
+>(config: TMachineConfig<TState, TEvent>) {
+  const machine: TMachine<TState, TEvent> = {
     state: config.initialState,
     transition(state, event) {
       const currentStateConfig = config.states[state];

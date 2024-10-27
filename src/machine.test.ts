@@ -6,7 +6,7 @@ function createSwitchMachine(): {
   machine: TMachine;
   config: TMachineConfig;
 } {
-  const config: TMachineConfig = {
+  const config = {
     initialState: 'off',
     states: {
       on: {

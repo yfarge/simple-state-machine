@@ -1,23 +1,33 @@
-export type TMachineStateConfig = {
+export type TAction = () => void;
+
+export type TTransition<TState extends string = string> = {
+  target: TState;
+  actions: Array<TAction>;
+};
+
+export type TStateConfig<
+  TState extends string = string,
+  TEvent extends string = string,
+> = {
   actions: {
-    onEnter: () => void;
-    onExit: () => void;
+    onEnter: TAction;
+    onExit: TAction;
   };
-  transitions: Record<string, { target: string; actions: Array<() => void> }>;
+  transitions: Record<TEvent, TTransition<TState>>;
 };
 
-export type TMachineConfig = {
-  initialState: keyof TMachineConfig['states'];
-  states: Record<string, TMachineStateConfig>;
+export type TMachineConfig<
+  TState extends string = string,
+  TEvent extends string = string,
+> = {
+  initialState: TState;
+  states: Record<TState, TStateConfig<TState, TEvent>>;
 };
 
-export type TMachine = {
-  state: keyof TMachineConfig['states'];
-  transition<
-    TState extends keyof TMachineConfig['states'],
-    TEvent extends keyof TMachineConfig['states'][TState]['transitions'],
-  >(
-    state: TState,
-    event: TEvent,
-  ): keyof TMachineConfig['states'];
+export type TMachine<
+  TState extends string = string,
+  TEvent extends string = string,
+> = {
+  state: TState;
+  transition(state: TState, event: TEvent): TState;
 };
