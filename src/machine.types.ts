@@ -9,25 +9,17 @@ export type TStateConfig<
   TState extends string = string,
   TEvent extends string = string,
 > = {
+  transitions: Record<TEvent, TTransition<TState>>;
   actions: {
     onEnter: TAction;
     onExit: TAction;
   };
-  transitions: Record<TEvent, TTransition<TState>>;
 };
 
-export type TMachineConfig<
+export type TConfig<
   TState extends string = string,
   TEvent extends string = string,
 > = {
   initialState: TState;
   states: Record<TState, TStateConfig<TState, TEvent>>;
-};
-
-export type TMachine<
-  TState extends string = string,
-  TEvent extends string = string,
-> = {
-  state: TState;
-  transition(state: TState, event: TEvent): TState;
 };

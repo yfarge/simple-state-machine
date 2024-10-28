@@ -1,14 +1,16 @@
-import type { TMachineConfig, TMachine } from './machine.types.js';
+import type { TConfig } from './machine.types.js';
 
-export function createMachine<
-  TState extends string = string,
-  TEvent extends string = string,
->(config: TMachineConfig<TState, TEvent>) {
-  const machine: TMachine<TState, TEvent> = {
+export function createMachine<TState extends string, TEvent extends string>(
+  config: TConfig<TState, TEvent>,
+) {
+  const machine = {
     state: config.initialState,
-    transition(state, event) {
+    transition<S extends TState>(
+      state: S,
+      event: Extract<keyof (typeof config)['states'][S]['transitions'], TEvent>,
+    ) {
       const currentStateConfig = config.states[state];
-      const transition = currentStateConfig?.transitions[event];
+      const transition = currentStateConfig.transitions[event];
 
       if (!transition) return machine.state;
 

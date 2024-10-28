@@ -1,11 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { createMachine } from './machine.js';
-import type { TMachine, TMachineConfig } from './machine.types.js';
 
-function createSwitchMachine(): {
-  machine: TMachine;
-  config: TMachineConfig;
-} {
+function createSwitchMachine() {
   const config = {
     initialState: 'off',
     states: {
@@ -34,8 +30,9 @@ function createSwitchMachine(): {
         },
       },
     },
-  };
+  } as const;
 
+  // @ts-expect-error
   const machine = createMachine(config);
   return { machine, config };
 }
@@ -84,6 +81,7 @@ describe('createMachine', () => {
     it('should remain in the current state if the event does not have an associated transition', () => {
       const { machine } = createSwitchMachine();
       const state = machine.state;
+      // @ts-expect-error
       expect(machine.transition(machine.state, 'unknown')).toBe(state);
       expect(machine.state).toBe(state);
     });
@@ -91,6 +89,7 @@ describe('createMachine', () => {
     it('should not call any actions if the the event does not have an associated transition', () => {
       const { machine, config } = createSwitchMachine();
       const state = machine.state;
+      // @ts-expect-error
       machine.transition(machine.state, 'unknown');
       expect(config.states[state]?.actions.onExit).not.toHaveBeenCalled();
     });
