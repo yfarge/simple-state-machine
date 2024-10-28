@@ -81,10 +81,11 @@ describe('createMachine', () => {
       expect(config.states['on']?.actions.onEnter).toHaveBeenCalledOnce();
     });
 
-    it('should return the current machine state if the event does not have an associated transition', () => {
+    it('should remain in the current state if the event does not have an associated transition', () => {
       const { machine } = createSwitchMachine();
       const state = machine.state;
       expect(machine.transition(machine.state, 'unknown')).toBe(state);
+      expect(machine.state).toBe(state);
     });
 
     it('should not call any actions if the the event does not have an associated transition', () => {
@@ -92,6 +93,61 @@ describe('createMachine', () => {
       const state = machine.state;
       machine.transition(machine.state, 'unknown');
       expect(config.states[state]?.actions.onExit).not.toHaveBeenCalled();
+    });
+
+    it('should remain in the current state if the transition target state does not exist', () => {
+      const config = {
+        initialState: 'on',
+        states: {
+          on: {
+            actions: {
+              onEnter: vi.fn(),
+              onExit: vi.fn(),
+            },
+            transitions: {
+              switch: {
+                target: 'unknown',
+                actions: [vi.fn(), vi.fn()],
+              },
+            },
+          },
+          off: {
+            actions: {
+              onEnter: vi.fn(),
+              onExit: vi.fn(),
+            },
+            transitions: {
+              switch: {
+                target: 'on',
+                actions: [vi.fn(), vi.fn()],
+              },
+            },
+          },
+        },
+      };
+      const machine = createMachine(config);
+      const initialState = machine.state;
+      expect(machine.transition(machine.state, 'switch')).toBe(initialState);
+    });
+
+    it('should handle repeated transitions correctly', () => {
+      const { machine, config } = createSwitchMachine();
+      expect(machine.state).toBe('off');
+      machine.transition(machine.state, 'switch');
+      expect(machine.state).toBe('on');
+      machine.transition(machine.state, 'switch');
+      expect(machine.state).toBe('off');
+
+      expect(config.states['off']!.actions.onExit).toHaveBeenCalledOnce();
+      config.states['off']!.transitions['switch']?.actions.forEach((action) =>
+        expect(action).toHaveBeenCalledOnce(),
+      );
+      expect(config.states['on']!.actions.onEnter).toHaveBeenCalledOnce();
+      config.states['on']!.transitions['switch']!.actions.forEach((action) =>
+        expect(action).toHaveBeenCalledOnce(),
+      );
+      expect(config.states['on']!.actions.onExit).toHaveBeenCalledOnce();
+      expect(config.states['off']!.actions.onEnter).toHaveBeenCalledOnce();
     });
   });
 });
