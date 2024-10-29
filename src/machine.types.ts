@@ -1,25 +1,19 @@
 export type TAction = () => void;
 
-export type TTransition<TState extends string = string> = {
-  target: TState;
+export type TTransition = {
+  target: string;
   actions: Array<TAction>;
 };
 
-export type TStateConfig<
-  TState extends string = string,
-  TEvent extends string = string,
-> = {
-  transitions: Record<TEvent, TTransition<TState>>;
-  actions: {
-    onEnter: TAction;
-    onExit: TAction;
-  };
-};
+export type TStateConfig = Record<
+  string,
+  {
+    actions: { onEnter: () => void; onExit: () => void };
+    transitions: Record<string, TTransition>;
+  }
+>;
 
-export type TConfig<
-  TState extends string = string,
-  TEvent extends string = string,
-> = {
-  initialState: TState;
-  states: Record<TState, TStateConfig<TState, TEvent>>;
+export type TConfig = {
+  initialState: string;
+  states: TStateConfig;
 };

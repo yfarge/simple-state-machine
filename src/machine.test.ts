@@ -30,9 +30,8 @@ function createSwitchMachine() {
         },
       },
     },
-  } as const;
+  };
 
-  // @ts-expect-error
   const machine = createMachine(config);
   return { machine, config };
 }
@@ -137,16 +136,16 @@ describe('createMachine', () => {
       machine.transition(machine.state, 'switch');
       expect(machine.state).toBe('off');
 
-      expect(config.states['off']!.actions.onExit).toHaveBeenCalledOnce();
-      config.states['off']!.transitions['switch']?.actions.forEach((action) =>
+      expect(config.states['off'].actions.onExit).toHaveBeenCalledOnce();
+      config.states['off'].transitions['switch']?.actions.forEach((action) =>
         expect(action).toHaveBeenCalledOnce(),
       );
-      expect(config.states['on']!.actions.onEnter).toHaveBeenCalledOnce();
-      config.states['on']!.transitions['switch']!.actions.forEach((action) =>
+      expect(config.states['on'].actions.onEnter).toHaveBeenCalledOnce();
+      config.states['on'].transitions['switch'].actions.forEach((action) =>
         expect(action).toHaveBeenCalledOnce(),
       );
-      expect(config.states['on']!.actions.onExit).toHaveBeenCalledOnce();
-      expect(config.states['off']!.actions.onEnter).toHaveBeenCalledOnce();
+      expect(config.states['on'].actions.onExit).toHaveBeenCalledOnce();
+      expect(config.states['off'].actions.onEnter).toHaveBeenCalledOnce();
     });
   });
 });
