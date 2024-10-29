@@ -1,19 +1,21 @@
 {
-  "name": "ts-state-machine",
+  "name": "simple-state-machine-ts",
   "version": "0.0.1",
   "description": "A finite state machine implementation in TypeScript.",
-  "main": "dist/machine.js",
+  "main": "dist/index.js",
   "keywords": [
     "typescript",
     "state",
-    "machine"
+    "machine",
+    "finite"
   ],
   "scripts": {
     "build": "tsc",
     "test": "vitest run",
     "format": "prettier --write .",
     "check-format": "prettier --check .",
-    "ci": "pnpm run check-format && pnpm run test && pnpm run build"
+    "check-exports": "attw $(pnpm pack .) --ignore-rules=cjs-resolves-to-esm",
+    "ci": "pnpm run build && pnpm run check-format && pnpm run check-exports && pnpm run test"
   },
   "repository": {
     "type": "git",
@@ -23,13 +25,14 @@
     "dist"
   ],
   "type": "module",
-  "homepage": "https://github.com/yfareg/ts-state-machine",
+  "homepage": "https://github.com/yfarge/simple-state-machine",
   "bugs": {
-    "url": "https://github.com/yfareg/ts-state-machine"
+    "url": "https://github.com/yfarge/simple-state-machine"
   },
   "author": "Yousef Farge",
   "license": "MIT",
   "devDependencies": {
+    "@arethetypeswrong/cli": "0.16.4",
     "@types/node": "22.8.1",
     "prettier": "3.3.3",
     "typescript": "5.6.3",

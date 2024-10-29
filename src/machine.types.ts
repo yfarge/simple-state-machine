@@ -8,7 +8,7 @@ export type TTransition = {
 export type TStateConfig = Record<
   string,
   {
-    actions: { onEnter: () => void; onExit: () => void };
+    actions: { onEnter: TAction; onExit: TAction };
     transitions: Record<string, TTransition>;
   }
 >;

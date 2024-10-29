@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { createMachine } from './machine.js';
+import { createMachine } from './index.js';
 
 function createSwitchMachine() {
   const config = {
